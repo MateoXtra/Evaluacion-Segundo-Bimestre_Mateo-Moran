@@ -28,10 +28,34 @@ public class form2 {
                 String user = "root";
                 String pass = "12345";
 
-                String sql = " INSERT INTO PRODUCTO (codigo_producto, nombre, descripcion, precio, cantidad, categoria)";
-                try(Connection connection = DriverManager.getConnection(url,user,pass)){
-                    PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM PRODUCTO");
+                Productos producto = new Productos();
+                String codigo = codp.getText();
+                String nombre = nomp.getText();
+                String descripcion = decp.getText();
+                double precio=Double.parseDouble(preciop.getText());
+                int cantidad=Integer.parseInt(cantp.getText());
+                String categoia=catep.getText();
 
+                producto.setCodigoProducto(codigo);
+                producto.setNombreProducto(nombre);
+                producto.setDescripcionProducto(descripcion);
+                producto.setPrecioProducto(precio);
+                producto.setCantidadProducto(cantidad);
+                producto.setCategoriaProducto(categoia);
+
+
+                String sql = "INSERT INTO PRODUCTO (codigo_producto, nombre, descripcion, precio, cantidad, categoria) VALUES ('CP001', 'Crema facial anti-edad', 'Crema facial hidratante y antiarrugas, 50ml', 29.99, 50, 'Cuidado Facial')" +
+                        "('CP002', 'Shampoo reparador', 'Shampoo fortificante para cabello dañado, 300ml', 12.50, 80, 'Cuidado Capilar')"+ ("'CP003', 'Jabón líquido de manos', 'Jabón antibacterial con aloe vera, 250ml', 8.99, 100, 'Higiene Personal'");
+                try (Connection connection = DriverManager.getConnection(url,user,pass)){
+                    System.out.println("BASE DE DATOS PRODUCTO CONETACADA CORRECTAMENTE");
+                    PreparedStatement preparedStatement = connection.prepareStatement(sql);
+                    preparedStatement.setString(1,codigo);
+                    preparedStatement.setString(2,nombre);
+                    preparedStatement.setString(3,descripcion);
+                    preparedStatement.setDouble(4,precio);
+                    preparedStatement.setInt(5,cantidad);
+                    preparedStatement.setString(6,categoia);
+                    preparedStatement.execute();
                 }catch (SQLException z){
                     System.out.println(z.getMessage());
                 }
@@ -41,6 +65,14 @@ public class form2 {
             @Override
             public void actionPerformed(ActionEvent e) {
 
+                JFrame frame = new JFrame();
+                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                frame.setTitle("BUSCAR PRODUCTO");
+                frame.setContentPane(new form3().buscar);
+                frame.pack();
+                frame.setVisible(true);
+
+                ((JFrame) SwingUtilities.getWindowAncestor(productos)).dispose();
             }
         });
     }

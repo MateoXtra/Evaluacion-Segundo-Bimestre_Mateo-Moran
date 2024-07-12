@@ -1,16 +1,19 @@
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.Driver;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class form1 {
     public JPanel login;
     private JTextField textField1;
     private JPasswordField passwordField1;
-    private JButton INGRESARButton;
+    private JButton INGRESAR;
 
     public form1() {
-        INGRESARButton.addActionListener(new ActionListener() {
+        INGRESAR.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String url = "jdbc:mysql://localhost:3306/USUARIO";
@@ -20,9 +23,10 @@ public class form1 {
                 String sql = "INSERT INTO USUARIO (username, password) VALUES ('Freddy', 'Freddy123')";
 
                 try(Connection connection = DriverManager.getConnection(url,user,pass)){
-                    System.out.println("Conexion a la base de datos de usuarios");
-                    PreparedStatement preparedStatement = connection.prepareStatement("select * from productos_cp.usuario");
-                    ResultSet resultSet = preparedStatement.executeQuery();
+                    System.out.println("Conexion exitosa con la base");
+
+                    String query = "SELECT * FROM USUARIO where username= '"+textField1.getText()+"'";
+                    String queryy = "SELECT * FROM USUARIO where password= '"+passwordField1.getText()+"'";
 
                     JFrame frame = new JFrame();
                     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -30,10 +34,13 @@ public class form1 {
                     frame.setContentPane(new form2().productos);
                     frame.pack();
                     frame.setVisible(true);
-                }catch (SQLException q){
-                    System.out.println(q);
+
+
+                }catch (SQLException i){
+                    System.out.println(i.getMessage());
                 }
-                ((JFrame)) SwingUtilities.getWindowAncestor(login);
+                ((JFrame) SwingUtilities.getWindowAncestor(login)).dispose();
+
             }
         });
     }
